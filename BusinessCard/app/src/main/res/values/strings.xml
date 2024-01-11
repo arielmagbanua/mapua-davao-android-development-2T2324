@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">BusinessCard</string>
+    <string name="phone_number">+11 (123) 444 555 666</string>
+    <string name="social_handle">\@AndroidDev</string>
+    <string name="email">jen.doe@android.com</string>
+</resources>
