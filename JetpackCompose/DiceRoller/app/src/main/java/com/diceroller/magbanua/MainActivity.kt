@@ -56,10 +56,12 @@ fun DiceWithButtonAndImage(modifier: Modifier = Modifier) {
 
         Image(
             painter = painterResource(imageResource),
-            contentDescription = "1"
+            contentDescription = result.toString()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { result = (1..6).random() }) {
+        Button(onClick = {
+            result = (1..6).random()
+        }) {
             Text(text = stringResource(R.string.roll))
         }
     }
