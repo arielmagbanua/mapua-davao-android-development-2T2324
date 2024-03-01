@@ -31,7 +31,11 @@ import com.magbanua.todo.R
 import com.magbanua.todo.ui.theme.TodoTheme
 
 @Composable
-fun LoginScreen(onLogin: (String, String) -> Unit, onGoogleSignIn: (currentUser: FirebaseUser?) -> Unit) {
+fun LoginScreen(
+    onLogin: (String, String) -> Unit,
+    onGoogleSignIn: (currentUser: FirebaseUser?) -> Unit,
+    onRegistrationClick: () -> Unit
+) {
     // State variables for username and password
     val usernameState = rememberSaveable { mutableStateOf("") }
     val passwordState = rememberSaveable { mutableStateOf("") }
@@ -123,6 +127,14 @@ fun LoginScreen(onLogin: (String, String) -> Unit, onGoogleSignIn: (currentUser:
         ) {
             Text(modifier = Modifier.padding(start = 8.dp), text = "Sign in with Google")
         }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onRegistrationClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(modifier = Modifier.padding(start = 8.dp), text = "Register")
+        }
     }
 }
 
@@ -130,7 +142,10 @@ fun LoginScreen(onLogin: (String, String) -> Unit, onGoogleSignIn: (currentUser:
 @Preview
 fun Preview() {
     TodoTheme {
-        LoginScreen(onLogin = { username, password -> }, onGoogleSignIn = {user ->})
-
+        LoginScreen(
+            onLogin = { username, password -> },
+            onGoogleSignIn = {user ->},
+            onRegistrationClick = {}
+        )
     }
 }
