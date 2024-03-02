@@ -37,7 +37,7 @@ fun LoginScreen(
     onRegistrationClick: () -> Unit
 ) {
     // State variables for username and password
-    val usernameState = rememberSaveable { mutableStateOf("") }
+    val emailState = rememberSaveable { mutableStateOf("") }
     val passwordState = rememberSaveable { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -92,9 +92,9 @@ fun LoginScreen(
     ) {
         // Username text field
         OutlinedTextField(
-            value = usernameState.value,
-            onValueChange = { usernameState.value = it },
-            label = { Text("Username") },
+            value = emailState.value,
+            onValueChange = { emailState.value = it },
+            label = { Text("Email") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -112,7 +112,7 @@ fun LoginScreen(
         // Login button
         Button(
             onClick = {
-                onLogin(usernameState.value, passwordState.value)
+                onLogin(emailState.value, passwordState.value)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
