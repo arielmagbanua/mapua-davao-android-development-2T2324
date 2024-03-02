@@ -2,6 +2,8 @@ package com.magbanua.todo.tasks.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.ExitToApp
@@ -41,8 +43,19 @@ fun TasksScreen(
         },
         content = { innerPadding ->
             Column (modifier.padding(innerPadding)) {
-                Text("Tasks")
+                val tasks = listOf<String>("Task 1", "Task 2", "Task 3")
+                TaskList(tasks)
             }
         }
     )
+}
+
+@Composable
+fun TaskList(tasks: List<String> = emptyList()) {
+    LazyColumn {
+        items(tasks) { task ->
+            // Replace this with your desired composable to display each document
+            Text(text = task)
+        }
+    }
 }
