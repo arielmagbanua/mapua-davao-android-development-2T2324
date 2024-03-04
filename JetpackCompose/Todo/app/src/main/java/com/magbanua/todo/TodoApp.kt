@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.magbanua.todo.auth.ui.RegistrationScreen
+import com.magbanua.todo.tasks.ui.AddTaskScreen
 import com.magbanua.todo.tasks.ui.TasksScreen
 
 @Composable
@@ -73,6 +74,10 @@ fun TodoApp(
                     onLogout = {
                         // sign-out firebase user
                         viewModel.logout()
+                    },
+                    onAddTask = {
+                        // navigate to add task screen
+                        navController.navigate("add_task")
                     }
                 )
             }
@@ -93,6 +98,27 @@ fun TodoApp(
                     },
                     navigateUp = {
                         navController.navigateUp()
+                    }
+                )
+            }
+
+            composable(route = "add_task") {
+                AddTaskScreen(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    saveTask = {
+                        title, description ->
+
+                        navController.navigateUp()
+
+                        // write task to firestore
+                        viewModel.saveTask(title = title, description = description, onAddSuccess = {
+                            Log.d("SAVE_TASK", it.toString())
+                        },
+                            onFailure = {
+                                Log.e("SAVE_TASK", it.message.toString())
+                            })
                     }
                 )
             }
