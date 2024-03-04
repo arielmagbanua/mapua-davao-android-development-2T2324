@@ -1,12 +1,11 @@
 package com.magbanua.todo.auth.ui
 
-import android.content.Context
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.auth
 import com.magbanua.todo.auth.data.AuthState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,5 +34,29 @@ class AuthViewModel: ViewModel() {
 
         // set the current user to null
         setCurrentUser(null)
+    }
+
+    fun register(
+        email: String,
+        password: String,
+        onRegistrationComplete: (task: Task<AuthResult>) -> Unit
+    ) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task -> onRegistrationComplete(task)}
+    }
+
+    fun signIn(email: String, password: String) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign-in successful
+                    // set the current user
+                    setCurrentUser(FirebaseAuth.getInstance().currentUser)
+                } else {
+                    // Sign-in failed
+                    // Handle exception and display error message
+                    Log.e("SIGN_IN", "Something went wrong!")
+                }
+            }
     }
 }

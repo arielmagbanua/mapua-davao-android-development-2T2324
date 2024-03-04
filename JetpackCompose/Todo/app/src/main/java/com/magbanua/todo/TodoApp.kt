@@ -1,5 +1,6 @@
 package com.magbanua.todo
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -51,7 +52,9 @@ fun TodoApp(
         ) {
             composable(route = "login") {
                 LoginScreen(
-                    onLogin = {username, password ->},
+                    onLogin = { email, password ->
+                        viewModel.signIn(email, password)
+                    },
                     onGoogleSignIn = {
                             currentUser ->
                         if (currentUser != null) {
@@ -78,6 +81,15 @@ fun TodoApp(
                 RegistrationScreen(
                     onRegister = { email, password ->
                         // register the user
+                        viewModel.register(email = email, password = password) { task ->
+                            if (task.isSuccessful) {
+                                // user was registered successfully so navigate back up
+                                navController.navigateUp()
+                            } else {
+                                // failed
+                                Log.e("SIGN_UP", "Something went wrong!")
+                            }
+                        }
                     },
                     navigateUp = {
                         navController.navigateUp()
