@@ -86,6 +86,9 @@ fun TodoApp(
                     onAddTask = {
                         // navigate to add task screen
                         navController.navigate("add_task")
+                    },
+                    onEdit = {
+                        navController.navigate("edit_task/$it")
                     }
                 )
             }
@@ -132,6 +135,35 @@ fun TodoApp(
                                     Log.e("SAVE_TASK", it.message.toString())
                                 })
                         }
+                    }
+                )
+            }
+
+            composable(route = "edit_task/{id}") { backStackEntry ->
+                // get the id parameter
+                val id = backStackEntry.arguments?.getString("id")
+
+                AddTaskScreen(
+                    id = id,
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    saveTask = { title, description ->
+                        navController.navigateUp()
+
+//                        if (currentEmail != null) {
+//                            // write task to firestore
+//                            tasksViewModel.saveTask(
+//                                title = title,
+//                                description = description,
+//                                email = currentEmail,
+//                                onAddSuccess = {
+//                                    Log.d("SAVE_TASK", it.toString())
+//                                },
+//                                onFailure = {
+//                                    Log.e("SAVE_TASK", it.message.toString())
+//                                })
+//                        }
                     }
                 )
             }

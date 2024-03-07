@@ -54,7 +54,8 @@ fun TasksScreen(
     authViewModel: AuthViewModel = viewModel(),
     tasksViewModel: TasksViewModel = viewModel(),
     onLogout: () -> Unit,
-    onAddTask: () -> Unit
+    onAddTask: () -> Unit,
+    onEdit: (String?) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -95,7 +96,8 @@ fun TasksScreen(
                         if (id != null) {
                             tasksViewModel.deleteTask(id)
                         }
-                    }
+                    },
+                    onEdit = onEdit
                 )
             }
         },
@@ -109,20 +111,26 @@ fun TasksScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskList(tasks: List<MyTask> = emptyList(), onDelete: (String?) -> Unit) {
+fun TaskList(
+    tasks: List<MyTask> = emptyList(),
+    onDelete: (String?) -> Unit,
+    onEdit: (String?) -> Unit,
+) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         items(
             items = tasks,
-            key = { task -> task.id ?: "" } // provide the key that will be used to track items in the list
+            key = { task ->
+                task.id ?: ""
+            } // provide the key that will be used to track items in the list
         ) { task ->
             TaskCard(
                 id = task.id,
                 title = task.title ?: "",
                 description = task.description ?: "",
                 onDelete = onDelete,
-                onEdit = {}
+                onEdit = onEdit
             )
         }
     }

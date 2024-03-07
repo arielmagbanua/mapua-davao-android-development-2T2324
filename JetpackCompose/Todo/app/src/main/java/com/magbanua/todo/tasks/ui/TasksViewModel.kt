@@ -2,6 +2,7 @@ package com.magbanua.todo.tasks.ui
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.tasks.await
 
 class TasksViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TasksState())
@@ -76,9 +78,24 @@ class TasksViewModel : ViewModel() {
         val db = Firebase.firestore
         db.collection("tasks").document(id).delete()
     }
+
+    suspend fun readTask(id: String): MyTask {
+        val db = Firebase.firestore
+        val taskDoc = db.collection("tasks").document(id).get().await()
+        return taskDoc.toMyTask()
+    }
 }
 
 fun QueryDocumentSnapshot.toMyTask(): MyTask {
+    return MyTask(
+        id = this.id,
+        title = this.getString("title"),
+        description = this.getString("description"),
+        email = this.getString("email")
+    )
+}
+
+fun DocumentSnapshot.toMyTask(): MyTask {
     return MyTask(
         id = this.id,
         title = this.getString("title"),
