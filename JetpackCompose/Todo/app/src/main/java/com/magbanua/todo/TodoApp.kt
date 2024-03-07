@@ -19,11 +19,13 @@ import androidx.navigation.compose.rememberNavController
 import com.magbanua.todo.auth.ui.RegistrationScreen
 import com.magbanua.todo.tasks.ui.AddTaskScreen
 import com.magbanua.todo.tasks.ui.TasksScreen
+import com.magbanua.todo.tasks.ui.TasksViewModel
 
 @Composable
 fun TodoApp(
     modifier: Modifier = Modifier,
-    viewModel: AuthViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel(),
+    tasksViewModel: TasksViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     Surface(
@@ -31,7 +33,7 @@ fun TodoApp(
         color = MaterialTheme.colorScheme.background
     ) {
         // get the auth ui state
-        val uiState by viewModel.uiState.collectAsState()
+        val uiState by authViewModel.uiState.collectAsState()
 
         // switch screen based on the current state of the user
         LaunchedEffect(uiState.currentUser) {
@@ -50,6 +52,9 @@ fun TodoApp(
             }
         }
 
+        val authUiState by authViewModel.uiState.collectAsState()
+        val currentEmail = authUiState.currentUser?.email
+
         NavHost(
             navController = navController,
             startDestination = "login",
@@ -58,12 +63,11 @@ fun TodoApp(
             composable(route = "login") {
                 LoginScreen(
                     onLogin = { email, password ->
-                        viewModel.signIn(email, password)
+                        authViewModel.signIn(email, password)
                     },
-                    onGoogleSignIn = {
-                            currentUser ->
+                    onGoogleSignIn = { currentUser ->
                         if (currentUser != null) {
-                            viewModel.setCurrentUser(currentUser)
+                            authViewModel.setCurrentUser(currentUser)
                         }
                     },
                     onRegistrationClick = {
@@ -77,7 +81,7 @@ fun TodoApp(
                 TasksScreen(
                     onLogout = {
                         // sign-out firebase user
-                        viewModel.logout()
+                        authViewModel.logout()
                     },
                     onAddTask = {
                         // navigate to add task screen
@@ -90,7 +94,7 @@ fun TodoApp(
                 RegistrationScreen(
                     onRegister = { email, password ->
                         // register the user
-                        viewModel.register(email = email, password = password) { task ->
+                        authViewModel.register(email = email, password = password) { task ->
                             if (task.isSuccessful) {
                                 // user was registered successfully so navigate back up
                                 navController.navigateUp()
@@ -111,18 +115,23 @@ fun TodoApp(
                     navigateUp = {
                         navController.navigateUp()
                     },
-                    saveTask = {
-                        title, description ->
+                    saveTask = { title, description ->
 
                         navController.navigateUp()
 
-                        // write task to firestore
-                        viewModel.saveTask(title = title, description = description, onAddSuccess = {
-                            Log.d("SAVE_TASK", it.toString())
-                        },
-                            onFailure = {
-                                Log.e("SAVE_TASK", it.message.toString())
-                            })
+                        if (currentEmail != null) {
+                            // write task to firestore
+                            tasksViewModel.saveTask(
+                                title = title,
+                                description = description,
+                                email = currentEmail,
+                                onAddSuccess = {
+                                    Log.d("SAVE_TASK", it.toString())
+                                },
+                                onFailure = {
+                                    Log.e("SAVE_TASK", it.message.toString())
+                                })
+                        }
                     }
                 )
             }
