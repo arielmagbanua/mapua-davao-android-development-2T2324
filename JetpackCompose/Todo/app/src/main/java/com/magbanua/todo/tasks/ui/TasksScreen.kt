@@ -2,6 +2,7 @@ package com.magbanua.todo.tasks.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -56,16 +58,13 @@ fun TasksScreen(
             )
         },
         content = { innerPadding ->
-            val tasksState = remember { mutableStateOf<MutableList<MyTask>>(emptyList<MyTask>().toMutableList()) }
+            val tasksState = remember { mutableStateOf(emptyList<MyTask>()) }
 
             viewModel.readTasks { tasks ->
-                if (tasks != null) {
-                    tasksState.value = tasks
-                }
+                tasksState.value = tasks
             }
 
             Column (modifier.padding(innerPadding)) {
-                // val tasks = listOf<String>("Task 1", "Task 2", "Task 3")
                 TaskList(tasksState.value)
             }
         },
@@ -79,10 +78,12 @@ fun TasksScreen(
 
 @Composable
 fun TaskList(tasks: List<MyTask> = emptyList()) {
-    LazyColumn {
+    LazyColumn (
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    ) {
         items(tasks) { task ->
             // Replace this with your desired composable to display each document
-            Text(text = task.title)
+            Text(text = task.title ?: "")
         }
     }
 }

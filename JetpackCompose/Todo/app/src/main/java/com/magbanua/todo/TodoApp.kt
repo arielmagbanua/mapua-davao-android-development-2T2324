@@ -33,16 +33,20 @@ fun TodoApp(
         // get the auth ui state
         val uiState by viewModel.uiState.collectAsState()
 
-        // fetch the currently logged user
-
         // switch screen based on the current state of the user
         LaunchedEffect(uiState.currentUser) {
             if (uiState.currentUser != null) {
-                // successful login
-                navController.navigate("tasks")
+                if (navController.currentDestination?.route?.equals("tasks") != true) {
+                    // successful login
+                    navController.navigate("tasks")
+                }
+
+
             } else {
-                // no more user then show the login screen
-                navController.navigate("login")
+                if (navController.currentDestination?.route?.equals("login") != true) {
+                    // no more user then show the login screen
+                    navController.navigate("login")
+                }
             }
         }
 

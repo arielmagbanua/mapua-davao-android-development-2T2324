@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObjects
 import com.google.firebase.ktx.Firebase
 import com.magbanua.todo.auth.data.AuthState
 import com.magbanua.todo.tasks.data.MyTask
@@ -91,28 +92,34 @@ class AuthViewModel: ViewModel() {
             }
     }
 
-    fun readTasks(onTasksUpdate: (tasks: MutableList<MyTask>?) -> Unit) {
+    fun readTasks(onTasksUpdate: (tasks: List<MyTask>) -> Unit) {
         val db = Firebase.firestore
         val email = _uiState.value.currentUser?.email
 
         db.collection("tasks")
             .whereEqualTo("email", email)
-            .addSnapshotListener{
-                    snapshot, e ->
-
-                val tasks = mutableListOf<MyTask>()
-
+            .addSnapshotListener{ snapshot, e ->
                 if (snapshot != null) {
-                    for (doc in snapshot) {
-                        val title = doc.getString("title")
-                        val description = doc.getString("description")
+                    val taskDocs = mutableListOf<MyTask>()
 
-                        val myTask = MyTask(title = title ?: "", description = description ?: "")
-                        tasks.add(myTask)
+                    for (taskDoc in snapshot.documents) {
+                        // convert each task document to task object
+                        val task = taskDoc.toObject(MyTask::class.java)
+                        if (task != null) {
+                            taskDocs.add(task)
+                        }
                     }
-                }
 
-                onTasksUpdate(tasks)
+//                    for (doc in snapshot) {
+//                        val title = doc.getString("title")
+//                        val description = doc.getString("description")
+//
+//                        val myTask = MyTask(title = title ?: "", description = description ?: "")
+//                        tasks.add(myTask)
+//                    }
+
+                    onTasksUpdate(taskDocs)
+                }
             }
     }
 }
