@@ -4,12 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.clickracer.auth.ui.AuthViewModel
+import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.ui.theme.ClickRacerTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,30 +22,40 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ClickRacerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                App()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun App(
+    modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+) {
+    val authUiState by authViewModel.uiState.collectAsState()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ClickRacerTheme {
-        Greeting("Android")
+    NavHost(
+        modifier = modifier.fillMaxSize(),
+        navController = navController,
+        startDestination = if (authUiState.currentUser == null) "login" else "sessions"
+    ) {
+        composable(route = "login") {
+            LoginScreen(
+                onLogin = { email, password ->
+                    authViewModel.signIn(email, password)
+                },
+                onGoogleSignIn = { currentUser ->
+                    if (currentUser != null) {
+                        authViewModel.setCurrentUser(currentUser)
+                    }
+                },
+                onRegistrationClick = {
+                    // navigate to registration screen
+                    navController.navigate("register")
+                }
+            )
+        }
     }
 }
