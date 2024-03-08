@@ -2,6 +2,7 @@ package com.example.clickracer
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -21,7 +22,6 @@ import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.auth.ui.RegistrationScreen
 import com.example.clickracer.game.ui.Sessions
 import com.example.clickracer.ui.theme.ClickRacerTheme
-import com.example.clickracer.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,6 +57,7 @@ fun App(
     ) {
         composable(route = "login") {
             LoginScreen(
+                authViewModel = authViewModel,
                 context = context,
                 onLogin = { email, password ->
                     authViewModel.signIn(email, password)
@@ -79,19 +80,21 @@ fun App(
                     // register the user
                     authViewModel.register(email = email, password = password) { task ->
                         if (task.isSuccessful) {
-                            showToast(
-                                context = context,
-                                message = context.getString(R.string.you_have_successfully_registered_enjoy_the_game)
-                            )
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.you_have_successfully_registered_enjoy_the_game),
+                                Toast.LENGTH_SHORT
+                            ).show()
 
                             // user was registered successfully so navigate back up
                             navController.navigateUp()
                         } else {
                             // failed
-                            showToast(
-                                context = context,
-                                message = context.getString(R.string.something_went_wrong_please_try_to_register_again)
-                            )
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.something_went_wrong_please_try_to_register_again),
+                                Toast.LENGTH_SHORT
+                            ).show()
 
                             Log.e(
                                 "SIGN_UP",
