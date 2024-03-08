@@ -32,13 +32,12 @@ fun TodoApp(
         color = MaterialTheme.colorScheme.background
     ) {
         // get the auth ui state
-        val uiState by authViewModel.uiState.collectAsState()
         val authUiState by authViewModel.uiState.collectAsState()
         val currentEmail = authUiState.currentUser?.email
 
         NavHost(
             navController = navController,
-            startDestination = if (uiState.currentUser == null) "login" else "tasks",
+            startDestination = if (authUiState.currentUser == null) "login" else "tasks",
             modifier = modifier
         ) {
             composable(route = "login") {
