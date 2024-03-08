@@ -93,9 +93,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 
     //noinspection UseTomlInstead
-    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.dagger:hilt-android:2.48")
     //noinspection UseTomlInstead
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
 }
 
 // Allow references to generated code

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,13 +21,19 @@ import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.auth.ui.RegistrationScreen
 import com.example.clickracer.ui.theme.ClickRacerTheme
 import com.example.clickracer.utils.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val authViewModel: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ClickRacerTheme {
-                App()
+                App(
+                    authViewModel = authViewModel
+                )
             }
         }
     }
@@ -34,8 +41,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App(
+    authViewModel: AuthViewModel,
     modifier: Modifier = Modifier,
-    authViewModel: AuthViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val authUiState by authViewModel.uiState.collectAsState()
