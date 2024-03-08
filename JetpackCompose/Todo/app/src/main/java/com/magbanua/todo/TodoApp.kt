@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -34,30 +33,12 @@ fun TodoApp(
     ) {
         // get the auth ui state
         val uiState by authViewModel.uiState.collectAsState()
-
-        // switch screen based on the current state of the user
-        LaunchedEffect(uiState.currentUser) {
-            if (uiState.currentUser != null) {
-                if (navController.currentDestination?.route?.equals("tasks") != true) {
-                    // successful login
-                    navController.navigate("tasks")
-                }
-
-
-            } else {
-                if (navController.currentDestination?.route?.equals("login") != true) {
-                    // no more user then show the login screen
-                    navController.navigate("login")
-                }
-            }
-        }
-
         val authUiState by authViewModel.uiState.collectAsState()
         val currentEmail = authUiState.currentUser?.email
 
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = if (uiState.currentUser == null) "login" else "tasks",
             modifier = modifier
         ) {
             composable(route = "login") {
