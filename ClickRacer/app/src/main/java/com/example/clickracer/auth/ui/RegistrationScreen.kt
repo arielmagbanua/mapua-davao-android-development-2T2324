@@ -85,7 +85,9 @@ fun RegistrationScreen(
                         value = emailState.value,
                         onValueChange = { emailState.value = it },
                         label = { Text(stringResource(R.string.email)) },
-                        modifier = modifier.fillMaxWidth()
+                        modifier = modifier.fillMaxWidth(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -114,7 +116,7 @@ fun RegistrationScreen(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done
                         ),
-                        isError = passwordState.value != confirmPasswordState.value
+                        isError = passwordState.value != confirmPasswordState.value,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 

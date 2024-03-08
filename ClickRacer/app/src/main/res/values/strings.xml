@@ -10,4 +10,8 @@
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="email">Email</string>
     <string name="registration">Registration</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="you_have_successfully_registered_enjoy_the_game">You have successfully registered! Enjoy the game!</string>
+    <string name="something_went_wrong_please_try_to_register_again">Something went wrong! Please try to register again.</string>
 </resources>

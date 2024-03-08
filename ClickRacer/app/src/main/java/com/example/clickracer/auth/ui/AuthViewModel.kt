@@ -44,7 +44,10 @@ class AuthViewModel : ViewModel() {
         onRegistrationComplete: (task: Task<AuthResult>) -> Unit
     ) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task -> onRegistrationComplete(task) }
+            .addOnCompleteListener { task ->
+                onRegistrationComplete(task)
+                logout() // logout immediately
+            }
     }
 
     fun signIn(email: String, password: String) {
