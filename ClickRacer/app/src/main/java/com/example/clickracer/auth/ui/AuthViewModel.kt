@@ -39,6 +39,7 @@ class AuthViewModel @Inject constructor(
 
     fun logout() {
         signOutUser()
+        setCurrentUser(null)
     }
 
     fun register(

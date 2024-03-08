@@ -1,7 +1,9 @@
 package com.example.clickracer.auth.ui
 
 import android.app.Activity
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 @Composable
 fun LoginScreen(
+    context: Context,
     onLogin: (String, String) -> Unit,
     onGoogleSignIn: (currentUser: FirebaseUser?) -> Unit,
     onRegistrationClick: () -> Unit
@@ -41,12 +44,8 @@ fun LoginScreen(
     val emailState = rememberSaveable { mutableStateOf("") }
     val passwordState = rememberSaveable { mutableStateOf("") }
 
-    val context = LocalContext.current
-
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(context.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
+        .requestIdToken(context.getString(R.string.default_web_client_id)).requestEmail().build()
 
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
@@ -118,9 +117,13 @@ fun LoginScreen(
         // Login button
         Button(
             onClick = {
+                if (emailState.value.isBlank() || passwordState.value.isBlank()) {
+                    Toast.makeText(context, "Invalid email or password!", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
                 onLogin(emailState.value, passwordState.value)
-            },
-            modifier = Modifier.fillMaxWidth()
+            }, modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.login))
         }
@@ -139,12 +142,10 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = onRegistrationClick,
-            modifier = Modifier.fillMaxWidth()
+            onClick = onRegistrationClick, modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                modifier = Modifier.padding(start = 8.dp),
-                text = stringResource(R.string.register)
+                modifier = Modifier.padding(start = 8.dp), text = stringResource(R.string.register)
             )
         }
     }

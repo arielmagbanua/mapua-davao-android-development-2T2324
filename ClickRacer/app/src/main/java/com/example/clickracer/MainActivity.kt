@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.clickracer.auth.ui.AuthViewModel
 import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.auth.ui.RegistrationScreen
+import com.example.clickracer.game.ui.Sessions
 import com.example.clickracer.ui.theme.ClickRacerTheme
 import com.example.clickracer.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,8 +42,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App(
-    authViewModel: AuthViewModel,
     modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val authUiState by authViewModel.uiState.collectAsState()
@@ -52,10 +53,11 @@ fun App(
     NavHost(
         modifier = modifier.fillMaxSize(),
         navController = navController,
-        startDestination = if (authUiState.currentUser == null) "login" else "sessions"
+        startDestination = if (authUiState.currentUser == null) "login" else "races"
     ) {
         composable(route = "login") {
             LoginScreen(
+                context = context,
                 onLogin = { email, password ->
                     authViewModel.signIn(email, password)
                 },
@@ -101,6 +103,15 @@ fun App(
                 },
                 navigateUp = {
                     navController.navigateUp()
+                }
+            )
+        }
+
+        composable(route = "races") {
+            Sessions(
+                authViewModel = authViewModel,
+                onLogout = {
+                    authViewModel.logout()
                 }
             )
         }
