@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -76,4 +78,15 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //noinspection UseTomlInstead
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
+
+    //noinspection UseTomlInstead
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-analytics")
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-auth")
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-firestore")
+    //noinspection UseTomlInstead
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 }

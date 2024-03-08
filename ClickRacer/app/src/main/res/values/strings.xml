@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ClickRacer</string>
+    <string name="default_web_client_id">93439268101-0g4hjq27o3l6bn8v1dougacmo69lskrb.apps.googleusercontent.com</string>
+    <string name="back">back</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="invalid_input">Invalid input</string>
+    <string name="register">Register</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="email">Email</string>
+    <string name="registration">Registration</string>
 </resources>
