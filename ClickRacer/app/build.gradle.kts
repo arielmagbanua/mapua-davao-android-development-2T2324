@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -89,4 +91,14 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     //noinspection UseTomlInstead
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+    //noinspection UseTomlInstead
+    implementation("com.google.dagger:hilt-android:2.44")
+    //noinspection UseTomlInstead
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
