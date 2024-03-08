@@ -74,6 +74,27 @@ class TasksViewModel : ViewModel() {
             }
     }
 
+    fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        onUpdateSuccess: () -> Unit,
+        onFailure: ((e: Exception) -> Unit)? = null
+    ) {
+        val db = Firebase.firestore
+
+        // document update
+        val taskDocument = hashMapOf(
+            "title" to title,
+            "description" to description
+        ).toMap()
+
+        db.collection("tasks")
+            .document(id)
+            .update(taskDocument)
+            .addOnSuccessListener { onUpdateSuccess() }
+    }
+
     fun deleteTask(id: String) {
         val db = Firebase.firestore
         db.collection("tasks").document(id).delete()

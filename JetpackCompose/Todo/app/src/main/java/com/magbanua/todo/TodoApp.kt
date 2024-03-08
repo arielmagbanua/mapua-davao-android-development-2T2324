@@ -115,11 +115,8 @@ fun TodoApp(
 
             composable(route = "add_task") {
                 AddTaskScreen(
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
+                    navigateUp = { navController.navigateUp() },
                     saveTask = { title, description ->
-
                         navController.navigateUp()
 
                         if (currentEmail != null) {
@@ -133,7 +130,8 @@ fun TodoApp(
                                 },
                                 onFailure = {
                                     Log.e("SAVE_TASK", it.message.toString())
-                                })
+                                },
+                            )
                         }
                     }
                 )
@@ -145,25 +143,23 @@ fun TodoApp(
 
                 AddTaskScreen(
                     id = id,
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
+                    navigateUp = { navController.navigateUp() },
                     saveTask = { title, description ->
                         navController.navigateUp()
 
-//                        if (currentEmail != null) {
-//                            // write task to firestore
-//                            tasksViewModel.saveTask(
-//                                title = title,
-//                                description = description,
-//                                email = currentEmail,
-//                                onAddSuccess = {
-//                                    Log.d("SAVE_TASK", it.toString())
-//                                },
-//                                onFailure = {
-//                                    Log.e("SAVE_TASK", it.message.toString())
-//                                })
-//                        }
+                        if (id != null) {
+                            tasksViewModel.updateTask(
+                                id = id,
+                                title = title,
+                                description = description,
+                                onUpdateSuccess = {
+                                    Log.d("UPDATE_TASK", "Updated success")
+                                },
+                                onFailure = {
+                                    Log.e("UPDATE_TASK", it.message.toString())
+                                },
+                            )
+                        }
                     }
                 )
             }
