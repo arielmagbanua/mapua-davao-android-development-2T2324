@@ -2,7 +2,7 @@ package com.example.clickracer.auth.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.clickracer.auth.data.AuthState
+import com.example.clickracer.auth.data.datastates.AuthState
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth

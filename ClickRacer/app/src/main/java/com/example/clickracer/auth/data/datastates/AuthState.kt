@@ -1,4 +1,4 @@
-package com.example.clickracer.auth.data
+package com.example.clickracer.auth.data.datastates
 
 import com.google.firebase.auth.FirebaseUser
 
