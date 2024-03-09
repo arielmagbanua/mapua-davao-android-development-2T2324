@@ -9,9 +9,9 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AuthModule {
+object AuthModule {
     @Provides
-    fun provideAuthAuthRepository(): AuthRepository {
+    fun provideAuthRepository(): AuthRepository {
         return AuthRepositoryImplementation()
     }
 }
