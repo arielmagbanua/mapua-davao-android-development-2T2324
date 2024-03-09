@@ -20,20 +20,24 @@ import androidx.navigation.compose.rememberNavController
 import com.example.clickracer.auth.ui.AuthViewModel
 import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.auth.ui.RegistrationScreen
-import com.example.clickracer.game.ui.Sessions
+import com.example.clickracer.game.ui.CreateRaceSession
+import com.example.clickracer.game.ui.RaceSessions
+import com.example.clickracer.game.ui.SessionsViewModel
 import com.example.clickracer.ui.theme.ClickRacerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
+    private val sessionsViewModel: SessionsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ClickRacerTheme {
                 App(
-                    authViewModel = authViewModel
+                    authViewModel = authViewModel,
+                    sessionsViewModel = sessionsViewModel
                 )
             }
         }
@@ -44,6 +48,7 @@ class MainActivity : ComponentActivity() {
 fun App(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
+    sessionsViewModel: SessionsViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val authUiState by authViewModel.uiState.collectAsState()
@@ -53,7 +58,7 @@ fun App(
     NavHost(
         modifier = modifier.fillMaxSize(),
         navController = navController,
-        startDestination = if (authUiState.currentUser == null) "login" else "races"
+        startDestination = if (authUiState.currentUser == null) "login" else "race_sessions"
     ) {
         composable(route = "login") {
             LoginScreen(
@@ -110,8 +115,29 @@ fun App(
             )
         }
 
-        composable(route = "races") {
-            Sessions(authViewModel = authViewModel)
+        composable(route = "create_session") {
+            CreateRaceSession(
+                authViewModel = authViewModel,
+                sessionsViewModel = sessionsViewModel,
+                onCreate = { id ->
+                    Log.d("GAME_SESSION", id)
+                    navController.navigateUp()
+
+                    // TODO: join the session
+
+
+                }
+            )
+        }
+
+        composable(route = "race_sessions") {
+            RaceSessions(
+                authViewModel = authViewModel,
+                sessionsViewModel = sessionsViewModel,
+                createRaceSession = {
+                    navController.navigate("create_session")
+                }
+            )
         }
     }
 }

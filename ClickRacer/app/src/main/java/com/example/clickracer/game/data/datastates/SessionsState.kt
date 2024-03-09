@@ -1,7 +1,7 @@
 package com.example.clickracer.game.data.datastates
 
-import com.example.clickracer.game.data.models.Session
+import com.example.clickracer.game.data.models.RaceSession
 
 data class SessionsState(
-    val openSessions: List<Session> = emptyList()
+    val openSessions: List<RaceSession> = emptyList()
 )
