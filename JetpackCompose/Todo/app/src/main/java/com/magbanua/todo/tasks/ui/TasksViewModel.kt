@@ -26,7 +26,7 @@ class TasksViewModel : ViewModel() {
         }
     }
 
-    fun readTasks(email: String, onTasksUpdate: (tasks: List<MyTask>) -> Unit) {
+    fun readTasks(email: String) {
         val db = Firebase.firestore
 
         db.collection("tasks")
@@ -41,7 +41,7 @@ class TasksViewModel : ViewModel() {
                         taskDocs.add(task)
                     }
 
-                    onTasksUpdate(taskDocs)
+                    updateCurrentTasks(taskDocs)
                 }
             }
     }

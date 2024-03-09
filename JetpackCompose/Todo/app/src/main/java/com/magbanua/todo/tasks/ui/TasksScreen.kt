@@ -77,9 +77,7 @@ fun TasksScreen(
 
             if (currentEmail != null) {
                 // read the tasks or update the tasks in case there is new task added
-                tasksViewModel.readTasks(email = currentEmail) { tasks ->
-                    tasksViewModel.updateCurrentTasks(tasks)
-                }
+                tasksViewModel.readTasks(email = currentEmail)
             }
 
             Column(modifier.padding(innerPadding)) {
