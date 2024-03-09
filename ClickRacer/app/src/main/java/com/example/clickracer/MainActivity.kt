@@ -111,12 +111,7 @@ fun App(
         }
 
         composable(route = "races") {
-            Sessions(
-                authViewModel = authViewModel,
-                onLogout = {
-                    authViewModel.logout()
-                }
-            )
+            Sessions(authViewModel = authViewModel)
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.example.clickracer.auth.ui
 
-import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
 import com.example.clickracer.auth.data.datastates.AuthState

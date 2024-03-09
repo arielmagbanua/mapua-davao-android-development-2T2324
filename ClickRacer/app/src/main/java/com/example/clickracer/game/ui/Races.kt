@@ -16,14 +16,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clickracer.auth.ui.AuthViewModel
+import com.example.clickracer.ui.theme.ClickRacerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Sessions(
     modifier: Modifier = Modifier,
-    onLogout: () -> Unit,
     authViewModel: AuthViewModel = viewModel()
 ) {
     Scaffold(
@@ -37,7 +38,7 @@ fun Sessions(
                     Text("Races")
                 },
                 actions = {
-                    IconButton(onClick = { onLogout() }) {
+                    IconButton(onClick = { authViewModel.logout() }) {
                         Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Logout")
                     }
                 }
@@ -54,4 +55,12 @@ fun Sessions(
             }
         }
     )
+}
+
+@Preview
+@Composable
+fun Preview() {
+    ClickRacerTheme {
+        Sessions()
+    }
 }
