@@ -21,6 +21,7 @@ import com.example.clickracer.auth.ui.AuthViewModel
 import com.example.clickracer.auth.ui.LoginScreen
 import com.example.clickracer.auth.ui.RegistrationScreen
 import com.example.clickracer.game.ui.CreateRaceSession
+import com.example.clickracer.game.ui.CurrentRaceSession
 import com.example.clickracer.game.ui.RaceSessions
 import com.example.clickracer.game.ui.SessionsViewModel
 import com.example.clickracer.ui.theme.ClickRacerTheme
@@ -124,10 +125,22 @@ fun App(
                     navController.navigateUp()
 
                     // TODO: join the session
-
-
+                    navController.navigate(route = "current_session/" + id)
                 }
             )
+        }
+
+        composable(route = "current_session/{id}") { backStackEntry ->
+            // get the id parameter
+            val id = backStackEntry.arguments?.getString("id")
+
+            if (id != null) {
+                CurrentRaceSession(
+                    id = id,
+                    authViewModel = authViewModel,
+                    sessionsViewModel = sessionsViewModel
+                )
+            }
         }
 
         composable(route = "race_sessions") {

@@ -13,4 +13,5 @@ interface SessionsRepository {
     )
 
     fun readOpenSessions(onSessionsUpdate: (List<RaceSession>) -> Unit)
+    fun readOpenSession(id: String, onSnapshot: (RaceSession) -> Unit)
 }
