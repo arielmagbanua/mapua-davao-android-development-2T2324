@@ -13,21 +13,37 @@ data class RaceSession(
 )
 
 fun QueryDocumentSnapshot.toRaceSession(): RaceSession {
+    var players = mutableListOf<HashMap<String, Any>>()
+
+    val data = this.get("players")
+    if (data != null) {
+        players = data as MutableList<HashMap<String, Any>>
+    }
+
     return RaceSession(
         id = this.id,
         title = this.getString("title") ?: "",
         host = this.getString("host") ?: "",
         maxProgress = this.getLong("maxProgress") ?: 100,
-        hasStarted = this.getBoolean("hasStarted") ?: false
+        hasStarted = this.getBoolean("hasStarted") ?: false,
+        players = players
     )
 }
 
 fun DocumentSnapshot.toRaceSession(): RaceSession {
+    var players = mutableListOf<HashMap<String, Any>>()
+
+    val data = this.get("players")
+    if (data != null) {
+        players = data as MutableList<HashMap<String, Any>>
+    }
+
     return RaceSession(
         id = this.id,
         title = this.getString("title") ?: "",
         host = this.getString("host") ?: "",
         maxProgress = this.getLong("maxProgress") ?: 100,
-        hasStarted = this.getBoolean("hasStarted") ?: false
+        hasStarted = this.getBoolean("hasStarted") ?: false,
+        players = players
     )
 }
