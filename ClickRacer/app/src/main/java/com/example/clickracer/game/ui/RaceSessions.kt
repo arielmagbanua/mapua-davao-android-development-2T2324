@@ -1,5 +1,6 @@
 package com.example.clickracer.game.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,9 +86,7 @@ fun RaceSessions(
     ) {
         items(
             items = sessions,
-            key = { session ->
-                session.id ?: ""
-            }
+            key = { session -> session.id }
         ) { session ->
             RaceSessionItem(session, onJoin)
         }
@@ -98,7 +98,11 @@ fun RaceSessionItem(raceSession: RaceSession, onJoin: (id: String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row {
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Column {
                 Text(text = raceSession.title, style = MaterialTheme.typography.titleLarge)
                 Text(
