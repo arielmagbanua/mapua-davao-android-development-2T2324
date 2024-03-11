@@ -54,7 +54,7 @@ fun CreateRaceSession(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Create Game Session")
+                    Text("Create Race Session")
                 },
                 actions = {
                     IconButton(onClick = { }) {
@@ -85,23 +85,18 @@ fun CreateRaceSession(
                             imeAction = ImeAction.Next
                         )
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
-
-                    Column(modifier.padding(innerPadding)) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        OutlinedTextField(
-                            value = maxProgressState.value,
-                            onValueChange = { maxProgressState.value = it },
-                            label = { Text("Max Progress") },
-                            modifier = modifier.fillMaxWidth(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            )
+                    OutlinedTextField(
+                        value = maxProgressState.value,
+                        onValueChange = { maxProgressState.value = it },
+                        label = { Text("Max Progress") },
+                        modifier = modifier.fillMaxWidth(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
                         )
-                    }
+                    )
                 }
             }
         },

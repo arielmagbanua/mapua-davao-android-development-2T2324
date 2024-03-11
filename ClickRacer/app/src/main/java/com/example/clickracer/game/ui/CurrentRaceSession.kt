@@ -122,7 +122,7 @@ fun CurrentRaceSession(
                             Button(modifier = Modifier.fillMaxWidth(), onClick = {
                                 // current user email
                                 val email = authUiState.currentUser?.email
-                                
+
                             }) {
                                 Text(text = "Increment")
                             }
