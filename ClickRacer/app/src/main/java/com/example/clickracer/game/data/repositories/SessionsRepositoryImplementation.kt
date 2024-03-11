@@ -21,13 +21,9 @@ class SessionsRepositoryImplementation : SessionsRepository {
         onAddSuccess: (doc: DocumentReference?) -> Unit,
         onFailure: ((e: Exception) -> Unit)?
     ) {
-        val hostPlayer = hashMapOf<String, Any>(
-            "player" to host,
-            "progress" to 0
+        val players = hashMapOf<String, Long>(
+            host to 0
         )
-
-        val players = mutableListOf<HashMap<String, Any>>()
-        players.add(hostPlayer)
 
         // create document map
         val sessionDocMap = hashMapOf(

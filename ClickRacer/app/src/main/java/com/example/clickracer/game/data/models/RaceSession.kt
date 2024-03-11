@@ -9,16 +9,11 @@ data class RaceSession(
     val host: String, // the email of the game session host
     val maxProgress: Long = 100,
     val hasStarted: Boolean = false,
-    val players: List<HashMap<String, Any>> = emptyList()
+    val players: HashMap<String, Long> = hashMapOf()
 )
 
 fun QueryDocumentSnapshot.toRaceSession(): RaceSession {
-    var players = mutableListOf<HashMap<String, Any>>()
-
     val data = this.get("players")
-    if (data != null) {
-        players = data as MutableList<HashMap<String, Any>>
-    }
 
     return RaceSession(
         id = this.id,
@@ -26,17 +21,12 @@ fun QueryDocumentSnapshot.toRaceSession(): RaceSession {
         host = this.getString("host") ?: "",
         maxProgress = this.getLong("maxProgress") ?: 100,
         hasStarted = this.getBoolean("hasStarted") ?: false,
-        players = players
+        players = data as HashMap<String, Long>
     )
 }
 
 fun DocumentSnapshot.toRaceSession(): RaceSession {
-    var players = mutableListOf<HashMap<String, Any>>()
-
     val data = this.get("players")
-    if (data != null) {
-        players = data as MutableList<HashMap<String, Any>>
-    }
 
     return RaceSession(
         id = this.id,
@@ -44,6 +34,6 @@ fun DocumentSnapshot.toRaceSession(): RaceSession {
         host = this.getString("host") ?: "",
         maxProgress = this.getLong("maxProgress") ?: 100,
         hasStarted = this.getBoolean("hasStarted") ?: false,
-        players = players
+        players = data as HashMap<String, Long>
     )
 }
