@@ -44,7 +44,7 @@ fun CreateRaceSession(
     val authUiState by authViewModel.uiState.collectAsState()
 
     val titleState = rememberSaveable { mutableStateOf("") }
-    val maxProgressState = rememberSaveable { mutableStateOf("") }
+    val maxProgressState = rememberSaveable { mutableStateOf("100") }
 
     Scaffold(
         topBar = {
