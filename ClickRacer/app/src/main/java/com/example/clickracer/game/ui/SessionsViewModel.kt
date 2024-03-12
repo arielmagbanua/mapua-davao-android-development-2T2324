@@ -6,6 +6,7 @@ import com.example.clickracer.game.data.models.RaceSession
 import com.example.clickracer.game.domain.usecases.CreateGameSession
 import com.example.clickracer.game.domain.usecases.CurrentOpenSession
 import com.example.clickracer.game.domain.usecases.ReadOpenSessions
+import com.example.clickracer.game.domain.usecases.UpdateSession
 import com.google.firebase.firestore.DocumentReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class SessionsViewModel @Inject constructor(
     private val gameSession: CreateGameSession,
     private val readOpenSessions: ReadOpenSessions,
-    private val currentOpenSession: CurrentOpenSession
+    private val currentOpenSession: CurrentOpenSession,
+    private val updateSession: UpdateSession
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SessionsState())
     val uiState: StateFlow<SessionsState> = _uiState.asStateFlow()
@@ -55,5 +57,9 @@ class SessionsViewModel @Inject constructor(
 
     fun readCurrentOpenSession(id: String, onSnapshot: (RaceSession) -> Unit) {
         currentOpenSession(id = id, onSnapshot = onSnapshot)
+    }
+
+    fun updateRaceSession(id: String, updatedSession: RaceSession) {
+        updateSession(id = id, updatedSession = updatedSession)
     }
 }

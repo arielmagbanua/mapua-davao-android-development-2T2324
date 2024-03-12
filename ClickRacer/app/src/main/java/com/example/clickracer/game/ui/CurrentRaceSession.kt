@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clickracer.auth.ui.AuthViewModel
+import com.example.clickracer.game.data.models.RaceSession
 import com.example.clickracer.ui.TextWithLabel
 
 @SuppressLint("MutableCollectionMutableState")
@@ -160,8 +161,15 @@ fun CurrentRaceSession(
                                             if (playerName == currentPlayer) currentPlayerProgress else playerProgress
                                     }
 
-                                    // TODO: update the game session
+                                    val updatedSession = RaceSession(
+                                        title = titleState.value,
+                                        host = hostState.value,
+                                        hasStarted = true,
+                                        maxProgress = maxProgressState.value.toLong(),
+                                        players = updatePlayers
+                                    )
 
+                                    sessionsViewModel.updateRaceSession(id = id, updatedSession)
                                 }
                             }) {
                                 Text(text = "Increment")
@@ -177,13 +185,13 @@ fun CurrentRaceSession(
 @Composable
 fun PlayerProgressIndicator(name: String, progress: Long, maxProgress: Long) {
     // calculate the progress
-    val currentProgress = (progress / maxProgress) * 100.0
+    val currentProgress = progress.toFloat() / maxProgress.toFloat()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = name, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         LinearProgressIndicator(
-            progress = { currentProgress.toFloat() },
+            progress = { currentProgress },
             modifier = Modifier.fillMaxWidth(),
         )
     }

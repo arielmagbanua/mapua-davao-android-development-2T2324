@@ -86,7 +86,7 @@ fun RaceSessions(
     ) {
         items(
             items = sessions,
-            key = { session -> session.id }
+            key = { session -> session.id ?: "" }
         ) { session ->
             RaceSessionItem(session, onJoin)
         }
@@ -110,7 +110,11 @@ fun RaceSessionItem(raceSession: RaceSession, onJoin: (id: String) -> Unit) {
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-            Button(onClick = { onJoin(raceSession.id) }) {
+            Button(onClick = {
+                if (raceSession.id != null) {
+                    onJoin(raceSession.id)
+                }
+            }) {
                 Text(text = "Join")
             }
         }
