@@ -5,6 +5,7 @@ import com.example.clickracer.game.data.datastates.SessionsState
 import com.example.clickracer.game.data.models.RaceSession
 import com.example.clickracer.game.domain.usecases.CreateGameSession
 import com.example.clickracer.game.domain.usecases.CurrentOpenSession
+import com.example.clickracer.game.domain.usecases.JoinPlayerSession
 import com.example.clickracer.game.domain.usecases.ReadOpenSessions
 import com.example.clickracer.game.domain.usecases.UpdateSession
 import com.google.firebase.firestore.DocumentReference
@@ -20,7 +21,8 @@ class SessionsViewModel @Inject constructor(
     private val gameSession: CreateGameSession,
     private val readOpenSessions: ReadOpenSessions,
     private val currentOpenSession: CurrentOpenSession,
-    private val updateSession: UpdateSession
+    private val updateSession: UpdateSession,
+    private val joinPlayerSession: JoinPlayerSession
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SessionsState())
     val uiState: StateFlow<SessionsState> = _uiState.asStateFlow()
@@ -61,5 +63,9 @@ class SessionsViewModel @Inject constructor(
 
     fun updateRaceSession(id: String, updatedSession: RaceSession) {
         updateSession(id = id, updatedSession = updatedSession)
+    }
+
+    suspend fun joinPlayerToSession(id: String, email: String) {
+        joinPlayerSession(id = id, email = email)
     }
 }

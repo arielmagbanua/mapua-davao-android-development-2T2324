@@ -17,4 +17,6 @@ interface SessionsRepository {
     fun readOpenSession(id: String, onSnapshot: (RaceSession) -> Unit, onError: ((e: Exception?) -> Unit)? = null)
 
     fun updateSession(id: String, updatedSession: RaceSession, onUpdateSuccess: (() -> Unit)? = null)
+
+    suspend fun joinPlayer(id: String, email: String)
 }

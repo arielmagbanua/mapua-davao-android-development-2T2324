@@ -123,9 +123,7 @@ fun App(
                 onCreate = { id ->
                     Log.d("GAME_SESSION", id)
                     navController.navigateUp()
-
-                    // TODO: join the session
-                    navController.navigate(route = "current_session/" + id)
+                    navController.navigate(route = "current_session/$id")
                 }
             )
         }
@@ -149,7 +147,8 @@ fun App(
                 sessionsViewModel = sessionsViewModel,
                 createRaceSession = {
                     navController.navigate("create_session")
-                }
+                },
+                onJoin = { id -> navController.navigate(route = "current_session/$id") }
             )
         }
     }

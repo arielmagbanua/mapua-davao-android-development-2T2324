@@ -37,7 +37,8 @@ fun RaceSessions(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(),
     sessionsViewModel: SessionsViewModel = viewModel(),
-    createRaceSession: () -> Unit
+    createRaceSession: () -> Unit,
+    onJoin: (id: String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -59,12 +60,11 @@ fun RaceSessions(
         content = { innerPadding ->
             Column(modifier.padding(innerPadding)) {
                 val sessionsState by sessionsViewModel.uiState.collectAsState()
+                val authState by authViewModel.uiState.collectAsState()
 
                 RaceSessions(
                     sessions = sessionsState.openSessions,
-                    onJoin = {
-                        // TODO: join the game
-                    }
+                    onJoin = onJoin
                 )
             }
         },
@@ -98,7 +98,7 @@ fun RaceSessionItem(raceSession: RaceSession, onJoin: (id: String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
