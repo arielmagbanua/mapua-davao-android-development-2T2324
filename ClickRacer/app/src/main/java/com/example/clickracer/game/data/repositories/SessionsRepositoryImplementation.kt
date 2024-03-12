@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 class SessionsRepositoryImplementation : SessionsRepository {
     private var db: FirebaseFirestore = Firebase.firestore
@@ -95,5 +96,22 @@ class SessionsRepositoryImplementation : SessionsRepository {
                     onUpdateSuccess()
                 }
             }
+    }
+
+    override suspend fun joinPlayer(id: String, email: String) {
+        // read first the players
+        val snapshot = db.collection("game_sessions")
+            .document(id)
+            .get()
+            .await()
+
+        val gameSession = snapshot.toRaceSession()
+        gameSession.players[email] = 0
+
+        val doc = gameSession.toMap()
+
+        db.collection("game_sessions")
+            .document(id)
+            .update(doc).await()
     }
 }

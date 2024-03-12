@@ -22,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clickracer.auth.ui.AuthViewModel
 import com.example.clickracer.game.data.models.RaceSession
 import com.example.clickracer.ui.TextWithLabel
+import kotlinx.coroutines.coroutineScope
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +74,7 @@ fun CurrentRaceSession(
                         .padding(start = 16.dp, end = 16.dp),
                 ) {
                     val authUiState by authViewModel.uiState.collectAsState()
-                    val sessionsUiState by sessionsViewModel.uiState.collectAsState()
+                    // val sessionsUiState by sessionsViewModel.uiState.collectAsState()
 
                     val titleState = rememberSaveable { mutableStateOf("") }
                     val hostState = rememberSaveable { mutableStateOf("") }
@@ -84,9 +87,21 @@ fun CurrentRaceSession(
                         titleState.value = raceSession.title
                         hostState.value = raceSession.host
                         maxProgressState.value = raceSession.maxProgress.toString()
+                        startState.value = raceSession.hasStarted
 
-                        // update list of players
                         playersState.value = raceSession.players
+                    }
+
+                    LaunchedEffect(id) {
+                        val currentEmail = authUiState.currentUser?.email
+                        // look up if the player already exist
+                        val currentPlayerProgress = playersState.value[currentEmail]
+                        if (currentEmail != null && currentEmail != hostState.value && currentPlayerProgress == null) {
+                            sessionsViewModel.joinPlayerToSession(
+                                id = id,
+                                email = currentEmail
+                            )
+                        }
                     }
 
                     // game info section
@@ -134,11 +149,21 @@ fun CurrentRaceSession(
                     ) {
                         // only allow starting of the game if the user is the host
                         // and if there are 2 or more players
-                        // if (!startState.value && authUiState.currentUser?.email == hostState.value && playersState.value.count() > 1) {
-                        if (!startState.value && authUiState.currentUser?.email == hostState.value) {
+                        if (!startState.value && authUiState.currentUser?.email == hostState.value && playersState.value.count() > 1) {
                             Button(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClick = { startState.value = true }) {
+                                onClick = {
+                                    val updatedSession = RaceSession(
+                                        title = titleState.value,
+                                        host = hostState.value,
+                                        hasStarted = true,
+                                        maxProgress = maxProgressState.value.toLong(),
+                                        players = playersState.value
+                                    )
+
+                                    sessionsViewModel.updateRaceSession(id = id, updatedSession)
+                                }
+                            ) {
                                 Text(text = "Start")
                             }
                         }
@@ -149,24 +174,14 @@ fun CurrentRaceSession(
                                 if (currentPlayer != null) {
                                     val currentPlayerProgress =
                                         (playersState.value[currentPlayer] ?: 0) + 1
-
-                                    // update the players
-                                    val updatePlayers = hashMapOf<String, Long>()
-                                    val iterator = playersState.value.iterator()
-                                    if (iterator.hasNext()) {
-                                        val entry = iterator.next()
-                                        val playerName = entry.key
-                                        val playerProgress = entry.value
-                                        updatePlayers[playerName] =
-                                            if (playerName == currentPlayer) currentPlayerProgress else playerProgress
-                                    }
+                                    playersState.value[currentPlayer] = currentPlayerProgress
 
                                     val updatedSession = RaceSession(
                                         title = titleState.value,
                                         host = hostState.value,
                                         hasStarted = true,
                                         maxProgress = maxProgressState.value.toLong(),
-                                        players = updatePlayers
+                                        players = playersState.value
                                     )
 
                                     sessionsViewModel.updateRaceSession(id = id, updatedSession)
