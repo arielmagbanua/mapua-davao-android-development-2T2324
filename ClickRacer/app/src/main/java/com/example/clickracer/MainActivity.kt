@@ -136,7 +136,10 @@ fun App(
                 CurrentRaceSession(
                     id = id,
                     authViewModel = authViewModel,
-                    sessionsViewModel = sessionsViewModel
+                    sessionsViewModel = sessionsViewModel,
+                    onGameEnd = {
+                        navController.popBackStack(route = "race_sessions", inclusive = false)
+                    }
                 )
             }
         }
