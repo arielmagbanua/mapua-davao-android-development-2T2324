@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,6 +38,7 @@ import com.example.clickracer.auth.ui.AuthViewModel
 import com.example.clickracer.game.data.models.RaceSession
 import com.example.clickracer.ui.TextWithLabel
 import kotlinx.coroutines.coroutineScope
+import androidx.compose.runtime.remember as rememberSaveable
 
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +46,7 @@ import kotlinx.coroutines.coroutineScope
 fun CurrentRaceSession(
     id: String,
     modifier: Modifier = Modifier,
+    onGameEnd: () -> Unit,
     authViewModel: AuthViewModel = viewModel(),
     sessionsViewModel: SessionsViewModel = viewModel(),
 ) {
@@ -82,6 +85,27 @@ fun CurrentRaceSession(
                     val playersState =
                         rememberSaveable { mutableStateOf(hashMapOf<String, Long>()) }
                     val startState = rememberSaveable { mutableStateOf(false) }
+                    val showDeclareWinnerDialog = rememberSaveable { mutableStateOf(false) }
+                    val declaredWinner = rememberSaveable { mutableStateOf("") }
+
+                    if (showDeclareWinnerDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showDeclareWinnerDialog.value = false
+                                onGameEnd()
+                            },
+                            title = { Text("Congratulations" + " ${declaredWinner.value}!") },
+                            text = { Text("You won the game!") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        showDeclareWinnerDialog.value = false
+                                        onGameEnd()
+                                    }
+                                ) { Text("OK") }
+                            }
+                        )
+                    }
 
                     sessionsViewModel.readCurrentOpenSession(id) { raceSession ->
                         titleState.value = raceSession.title
@@ -90,6 +114,17 @@ fun CurrentRaceSession(
                         startState.value = raceSession.hasStarted
 
                         playersState.value = raceSession.players
+
+                        // check each progress and declare the winner if there is already a winner
+                        for (entry in raceSession.players) {
+                            val player = entry.key
+                            val progress = entry.value
+
+                            if (progress >= raceSession.maxProgress && !showDeclareWinnerDialog.value) {
+                                declaredWinner.value = player
+                                showDeclareWinnerDialog.value = true
+                            }
+                        }
                     }
 
                     LaunchedEffect(id) {
@@ -174,7 +209,8 @@ fun CurrentRaceSession(
                                 if (currentPlayer != null) {
                                     val currentPlayerProgress =
                                         (playersState.value[currentPlayer] ?: 0) + 1
-                                    val playerUpdates = HashMap(playersState.value) // copy the original content
+                                    val playerUpdates =
+                                        HashMap(playersState.value) // copy the original content
                                     playerUpdates[currentPlayer] = currentPlayerProgress
 
                                     val updatedSession = RaceSession(
@@ -184,6 +220,24 @@ fun CurrentRaceSession(
                                         maxProgress = maxProgressState.value.toLong(),
                                         players = playerUpdates
                                     )
+
+                                    if (currentPlayerProgress >= maxProgressState.value.toLong()) {
+                                        // show dialog to declare the winner
+                                        // showDeclareWinnerDialog.value = true
+
+                                        // set the name for the dialog
+
+                                        // this player wins stop the game and declare the player
+                                        val finalUpdatedSession = updatedSession.copy(
+                                            hasStarted = false
+                                        )
+
+                                        sessionsViewModel.updateRaceSession(
+                                            id = id,
+                                            finalUpdatedSession
+                                        )
+                                        return@Button
+                                    }
 
                                     sessionsViewModel.updateRaceSession(id = id, updatedSession)
                                 }
