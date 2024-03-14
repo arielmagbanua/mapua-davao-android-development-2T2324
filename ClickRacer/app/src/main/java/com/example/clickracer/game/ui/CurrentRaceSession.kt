@@ -174,14 +174,15 @@ fun CurrentRaceSession(
                                 if (currentPlayer != null) {
                                     val currentPlayerProgress =
                                         (playersState.value[currentPlayer] ?: 0) + 1
-                                    playersState.value[currentPlayer] = currentPlayerProgress
+                                    val playerUpdates = HashMap(playersState.value)
+                                    playerUpdates[currentPlayer] = currentPlayerProgress
 
                                     val updatedSession = RaceSession(
                                         title = titleState.value,
                                         host = hostState.value,
                                         hasStarted = true,
                                         maxProgress = maxProgressState.value.toLong(),
-                                        players = playersState.value
+                                        players = playerUpdates
                                     )
 
                                     sessionsViewModel.updateRaceSession(id = id, updatedSession)
