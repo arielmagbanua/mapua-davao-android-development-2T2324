@@ -174,7 +174,7 @@ fun CurrentRaceSession(
                                 if (currentPlayer != null) {
                                     val currentPlayerProgress =
                                         (playersState.value[currentPlayer] ?: 0) + 1
-                                    val playerUpdates = HashMap(playersState.value)
+                                    val playerUpdates = HashMap(playersState.value) // copy the original content
                                     playerUpdates[currentPlayer] = currentPlayerProgress
 
                                     val updatedSession = RaceSession(
